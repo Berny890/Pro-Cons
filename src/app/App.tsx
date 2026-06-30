@@ -411,9 +411,12 @@ export default function App() {
                     A favor
                   </h2>
                   {shortTopic && (
-                    <span className="text-xs text-muted-foreground hidden sm:inline truncate max-w-[140px]">
+                    <h2
+                      className="text-xl font-semibold hidden sm:inline truncate max-w-[160px]"
+                      style={{ fontFamily: "'Playfair Display', serif", color: PRO_COLOR }}
+                    >
                       de {shortTopic}
-                    </span>
+                    </h2>
                   )}
                   <span className="text-sm text-muted-foreground">({proItems.length})</span>
                 </div>
@@ -465,9 +468,12 @@ export default function App() {
                     En contra
                   </h2>
                   {shortTopic && (
-                    <span className="text-xs text-muted-foreground hidden sm:inline truncate max-w-[140px]">
+                    <h2
+                      className="text-xl font-semibold hidden sm:inline truncate max-w-[160px]"
+                      style={{ fontFamily: "'Playfair Display', serif", color: CONTRA_COLOR }}
+                    >
                       de {shortTopic}
-                    </span>
+                    </h2>
                   )}
                   <span className="text-sm text-muted-foreground">({contraItems.length})</span>
                 </div>
@@ -669,7 +675,7 @@ export default function App() {
           {/* Pros */}
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-              <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: PRO_COLOR }} />
+              <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: PRO_COLOR, flexShrink: 0 }} />
               <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", fontWeight: 600, color: PRO_COLOR }}>
                 A favor
               </span>
