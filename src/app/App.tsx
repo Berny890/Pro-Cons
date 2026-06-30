@@ -315,10 +315,6 @@ export default function App() {
     { name: "En contra", value: contraTotal },
   ];
 
-  // Strip ¿? for inline use so "A favor de ¿Cambiar de trabajo?" → "A favor de Cambiar de trabajo"
-  const topicLabel = topic.replace(/^¿/, "").replace(/\?$/, "").trim();
-  const shortTopic = topicLabel.length > 28 ? topicLabel.slice(0, 28) + "…" : topicLabel;
-
   return (
     <>
       {showModal && <WelcomeModal onConfirm={handleStart} />}
@@ -410,14 +406,6 @@ export default function App() {
                   >
                     A favor
                   </h2>
-                  {shortTopic && (
-                    <h2
-                      className="text-xl font-semibold hidden sm:inline truncate max-w-[160px]"
-                      style={{ fontFamily: "'Playfair Display', serif", color: PRO_COLOR }}
-                    >
-                      de {shortTopic}
-                    </h2>
-                  )}
                   <span className="text-sm text-muted-foreground">({proItems.length})</span>
                 </div>
                 <span
@@ -467,14 +455,6 @@ export default function App() {
                   >
                     En contra
                   </h2>
-                  {shortTopic && (
-                    <h2
-                      className="text-xl font-semibold hidden sm:inline truncate max-w-[160px]"
-                      style={{ fontFamily: "'Playfair Display', serif", color: CONTRA_COLOR }}
-                    >
-                      de {shortTopic}
-                    </h2>
-                  )}
                   <span className="text-sm text-muted-foreground">({contraItems.length})</span>
                 </div>
                 <span
