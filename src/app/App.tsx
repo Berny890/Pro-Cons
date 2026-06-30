@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   BarChart,
   Bar,
@@ -11,7 +11,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { Plus, Trash2, RotateCcw, X } from "lucide-react";
+import { Plus, Trash2, RotateCcw, X, Download } from "lucide-react";
+import html2canvas from "html2canvas";
 
 type ItemType = "pro" | "contra";
 
@@ -252,6 +253,8 @@ export default function App() {
   );
   const [chartType, setChartType] = useState<ChartType>("bar");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (topic) saveToStorage(items, topic);
@@ -268,6 +271,23 @@ export default function App() {
     setTopic("");
     setShowModal(true);
     setShowResetConfirm(false);
+  };
+
+  const handleExport = async () => {
+    if (!exportRef.current) return;
+    setExporting(true);
+    await new Promise((r) => setTimeout(r, 100)); // allow re-render
+    const canvas = await html2canvas(exportRef.current, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+    });
+    const link = document.createElement("a");
+    const safeName = topic.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]/g, "").trim().slice(0, 40) || "decision";
+    link.download = `${safeName}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    setExporting(false);
   };
 
   const addItem = (type: ItemType) =>
@@ -309,7 +329,7 @@ export default function App() {
           fontFamily: "'DM Sans', sans-serif",
         }}
       >
-        <div className="max-w-5xl mx-auto px-4 py-10 pb-20">
+        <div className="max-w-5xl mx-auto px-4 py-10 pb-20" ref={exportRef}>
           {/* Header */}
           <div className="text-center mb-8">
             <h1
@@ -328,6 +348,14 @@ export default function App() {
                 className="text-center text-lg font-medium bg-card border border-border rounded-2xl px-5 py-2.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all shadow-sm max-w-md w-full"
                 placeholder="¿Qué estás evaluando?"
               />
+              <button
+                onClick={handleExport}
+                disabled={exporting || total === 0}
+                className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 shrink-0 disabled:opacity-30"
+                title="Exportar como imagen"
+              >
+                <Download size={16} />
+              </button>
               <button
                 onClick={() => setShowResetConfirm(true)}
                 className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 shrink-0"
