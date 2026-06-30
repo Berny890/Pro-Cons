@@ -276,11 +276,11 @@ export default function App() {
   const handleExport = async () => {
     if (!exportRef.current) return;
     setExporting(true);
-    await new Promise((r) => setTimeout(r, 100)); // allow re-render
+    await new Promise((r) => setTimeout(r, 150));
     const canvas = await html2canvas(exportRef.current, {
-      backgroundColor: null,
       scale: 2,
       useCORS: true,
+      backgroundColor: "#fdf8f0",
     });
     const link = document.createElement("a");
     const safeName = topic.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]/g, "").trim().slice(0, 40) || "decision";
@@ -315,8 +315,9 @@ export default function App() {
     { name: "En contra", value: contraTotal },
   ];
 
-  // Short label for column headers derived from topic
-  const shortTopic = topic.length > 30 ? topic.slice(0, 30) + "…" : topic;
+  // Strip ¿? for inline use so "A favor de ¿Cambiar de trabajo?" → "A favor de Cambiar de trabajo"
+  const topicLabel = topic.replace(/^¿/, "").replace(/\?$/, "").trim();
+  const shortTopic = topicLabel.length > 28 ? topicLabel.slice(0, 28) + "…" : topicLabel;
 
   return (
     <>
@@ -329,7 +330,7 @@ export default function App() {
           fontFamily: "'DM Sans', sans-serif",
         }}
       >
-        <div className="max-w-5xl mx-auto px-4 py-10 pb-20" ref={exportRef}>
+        <div className="max-w-5xl mx-auto px-4 py-10 pb-20">
           {/* Header */}
           <div className="text-center mb-8">
             <h1
@@ -638,6 +639,134 @@ export default function App() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* ── Export-only canvas (hidden off-screen) ── */}
+      <div
+        ref={exportRef}
+        style={{
+          position: "fixed",
+          top: "-9999px",
+          left: "-9999px",
+          width: "900px",
+          padding: "48px",
+          background: "linear-gradient(145deg, #fdf8f0 0%, #f5e8d5 50%, #fdf0e8 100%)",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
+        {/* Title */}
+        <div style={{ textAlign: "center", marginBottom: "32px" }}>
+          <p style={{ fontSize: "13px", color: "#7a6a5a", marginBottom: "6px", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+            Balanza de decisiones
+          </p>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "32px", fontWeight: 600, color: "#2c1a0e", margin: 0 }}>
+            {topic}
+          </h1>
+        </div>
+
+        {/* Items grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", marginBottom: "32px" }}>
+          {/* Pros */}
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+              <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: PRO_COLOR }} />
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", fontWeight: 600, color: PRO_COLOR }}>
+                A favor
+              </span>
+              <span style={{ fontSize: "12px", color: "#7a6a5a", marginLeft: "2px" }}>
+                · Total {prosTotal}
+              </span>
+            </div>
+            {proItems.map((item) => (
+              <div key={item.id} style={{
+                backgroundColor: "rgba(107,143,113,0.08)",
+                border: "1px solid rgba(107,143,113,0.25)",
+                borderRadius: "14px",
+                padding: "10px 14px",
+                marginBottom: "8px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}>
+                <span style={{ fontSize: "13px", color: "#2c1a0e", fontWeight: 500 }}>{item.label || "—"}</span>
+                <span style={{ fontSize: "12px", fontWeight: 700, color: PRO_COLOR, marginLeft: "12px", whiteSpace: "nowrap" }}>
+                  {item.weight}/10
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Contras */}
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+              <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: CONTRA_COLOR }} />
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", fontWeight: 600, color: CONTRA_COLOR }}>
+                En contra
+              </span>
+              <span style={{ fontSize: "12px", color: "#7a6a5a", marginLeft: "2px" }}>
+                · Total {contraTotal}
+              </span>
+            </div>
+            {contraItems.map((item) => (
+              <div key={item.id} style={{
+                backgroundColor: "rgba(201,123,75,0.08)",
+                border: "1px solid rgba(201,123,75,0.25)",
+                borderRadius: "14px",
+                padding: "10px 14px",
+                marginBottom: "8px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}>
+                <span style={{ fontSize: "13px", color: "#2c1a0e", fontWeight: 500 }}>{item.label || "—"}</span>
+                <span style={{ fontSize: "12px", fontWeight: 700, color: CONTRA_COLOR, marginLeft: "12px", whiteSpace: "nowrap" }}>
+                  {item.weight}/10
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Score bars */}
+        {total > 0 && (
+          <div style={{ backgroundColor: "rgba(255,252,245,0.8)", borderRadius: "20px", padding: "20px 24px", border: "1px solid rgba(44,26,14,0.08)" }}>
+            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600, color: "#2c1a0e", marginBottom: "14px" }}>
+              Resultado ponderado
+            </p>
+            {/* Pro bar */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: PRO_COLOR, width: "70px", textAlign: "right" }}>
+                A favor {prosTotal}
+              </span>
+              <div style={{ flex: 1, height: "10px", backgroundColor: "rgba(44,26,14,0.08)", borderRadius: "999px", overflow: "hidden" }}>
+                <div style={{ width: `${(prosTotal / total) * 100}%`, height: "100%", backgroundColor: PRO_COLOR, borderRadius: "999px" }} />
+              </div>
+              <span style={{ fontSize: "12px", color: "#7a6a5a", width: "36px" }}>
+                {Math.round((prosTotal / total) * 100)}%
+              </span>
+            </div>
+            {/* Contra bar */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: CONTRA_COLOR, width: "70px", textAlign: "right" }}>
+                En contra {contraTotal}
+              </span>
+              <div style={{ flex: 1, height: "10px", backgroundColor: "rgba(44,26,14,0.08)", borderRadius: "999px", overflow: "hidden" }}>
+                <div style={{ width: `${(contraTotal / total) * 100}%`, height: "100%", backgroundColor: CONTRA_COLOR, borderRadius: "999px" }} />
+              </div>
+              <span style={{ fontSize: "12px", color: "#7a6a5a", width: "36px" }}>
+                {Math.round((contraTotal / total) * 100)}%
+              </span>
+            </div>
+            {/* Verdict */}
+            <p style={{ marginTop: "14px", fontSize: "13px", color: "#7a6a5a", textAlign: "center" }}>
+              {winner === "empate"
+                ? "Empate — decisión difícil"
+                : winner === "pros"
+                ? `Los pros llevan la delantera por ${prosTotal - contraTotal} puntos`
+                : `Los contras pesan más por ${contraTotal - prosTotal} puntos`}
+            </p>
+          </div>
+        )}
       </div>
     </>
   );
