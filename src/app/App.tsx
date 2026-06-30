@@ -654,12 +654,12 @@ export default function App() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", marginBottom: "32px" }}>
           {/* Pros */}
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", lineHeight: 1 }}>
               <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: PRO_COLOR, flexShrink: 0 }} />
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", fontWeight: 600, color: PRO_COLOR }}>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", fontWeight: 600, color: PRO_COLOR, lineHeight: 1 }}>
                 A favor
               </span>
-              <span style={{ fontSize: "12px", color: "#7a6a5a", marginLeft: "2px" }}>
+              <span style={{ fontSize: "12px", color: "#7a6a5a", marginLeft: "2px", lineHeight: 1 }}>
                 · Total {prosTotal}
               </span>
             </div>
@@ -674,8 +674,8 @@ export default function App() {
                 justifyContent: "space-between",
                 alignItems: "center",
               }}>
-                <span style={{ fontSize: "13px", color: "#2c1a0e", fontWeight: 500 }}>{item.label || "—"}</span>
-                <span style={{ fontSize: "12px", fontWeight: 700, color: PRO_COLOR, marginLeft: "12px", whiteSpace: "nowrap" }}>
+                <span style={{ fontSize: "13px", color: "#2c1a0e", fontWeight: 500, lineHeight: 1.4 }}>{item.label || "—"}</span>
+                <span style={{ fontSize: "12px", fontWeight: 700, color: PRO_COLOR, marginLeft: "12px", whiteSpace: "nowrap", lineHeight: 1.4 }}>
                   {item.weight}/10
                 </span>
               </div>
@@ -684,12 +684,12 @@ export default function App() {
 
           {/* Contras */}
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-              <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: CONTRA_COLOR }} />
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", fontWeight: 600, color: CONTRA_COLOR }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", lineHeight: 1 }}>
+              <div style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: CONTRA_COLOR, flexShrink: 0 }} />
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", fontWeight: 600, color: CONTRA_COLOR, lineHeight: 1 }}>
                 En contra
               </span>
-              <span style={{ fontSize: "12px", color: "#7a6a5a", marginLeft: "2px" }}>
+              <span style={{ fontSize: "12px", color: "#7a6a5a", marginLeft: "2px", lineHeight: 1 }}>
                 · Total {contraTotal}
               </span>
             </div>
@@ -704,8 +704,8 @@ export default function App() {
                 justifyContent: "space-between",
                 alignItems: "center",
               }}>
-                <span style={{ fontSize: "13px", color: "#2c1a0e", fontWeight: 500 }}>{item.label || "—"}</span>
-                <span style={{ fontSize: "12px", fontWeight: 700, color: CONTRA_COLOR, marginLeft: "12px", whiteSpace: "nowrap" }}>
+                <span style={{ fontSize: "13px", color: "#2c1a0e", fontWeight: 500, lineHeight: 1.4 }}>{item.label || "—"}</span>
+                <span style={{ fontSize: "12px", fontWeight: 700, color: CONTRA_COLOR, marginLeft: "12px", whiteSpace: "nowrap", lineHeight: 1.4 }}>
                   {item.weight}/10
                 </span>
               </div>
